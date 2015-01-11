@@ -1,7 +1,12 @@
 defmodule GimlexTest do
   use ExUnit.Case
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  @int_file """
+  :num: my_int
+  2
+  """
+
+  test "gimlex can parse integer" do
+    assert Gimlex.parse_content(@int_file) == [{"my_int", 2}]
   end
 end
