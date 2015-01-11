@@ -1,4 +1,3 @@
-Gimlex
-======
+# Gimlex [![Build Status]](https://travis-ci.org/GIML/gimlex)
 
-** TODO: Add description **
+[Build Status]: https://img.shields.io/travis/GIML/gimlex.svg?style=flat-square
