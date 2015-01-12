@@ -16,8 +16,19 @@ defmodule Gimlex do
     {:num, name}
   end
 
+  defp parse_type(<<":text:", rest::binary>>) do
+    name = rest
+    |> String.split
+    |> List.first
+    {:text, name}
+  end
+
   defp parse_value({:num, name}, [head|tail]) do
     {name, parse_num(head)}
+  end
+
+  defp parse_value({:text, name}, [head|tail]) do
+    {name, parse_text(head)}
   end
 
   defp parse_num(num) do
@@ -25,5 +36,9 @@ defmodule Gimlex do
       false -> String.to_integer(num)
       true -> String.to_float(num)
     end
+  end
+
+  defp parse_text(str) do
+    str
   end
 end
