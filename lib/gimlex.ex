@@ -2,10 +2,10 @@ defmodule Gimlex do
   def parse_content(data) do
     data
     |> String.split("\n", trim: true)
-    |> parse_string([])
+    |> parse_content([])
   end
 
-  defp parse_string([head|tail], acc) do
+  defp parse_content([head|tail], acc) do
     [parse_value(parse_type(head), tail) | acc]
   end
 
@@ -27,8 +27,8 @@ defmodule Gimlex do
     {name, parse_num(head)}
   end
 
-  defp parse_value({:text, name}, [head|tail]) do
-    {name, parse_text(head)}
+  defp parse_value({:text, name}, rest) do
+    {name, parse_text(rest)}
   end
 
   defp parse_num(num) do
@@ -39,6 +39,14 @@ defmodule Gimlex do
   end
 
   defp parse_text(str) do
-    str
+    parse_text(str, [])
+  end
+
+  defp parse_text([], acc) do
+    acc |> Enum.reverse |> Enum.join("\n")
+  end
+
+  defp parse_text([head|tail], acc) do
+    parse_text(tail, [head|acc])
   end
 end

@@ -16,6 +16,12 @@ defmodule GimlexTest do
   test
   """
 
+  @multiline_string_file """
+  :text: my_string
+  one
+  two
+  """
+
   test "gimlex can parse integer" do
     assert Gimlex.parse_content(@int_file) == [{"my_int", 2}]
   end
@@ -26,5 +32,10 @@ defmodule GimlexTest do
 
   test "gimlex can parse oneline string" do
     assert Gimlex.parse_content(@oneline_string_file) == [{"my_string", "test"}]
+  end
+
+  test "gimlex can parse multiline string" do
+    expected = [{"my_string", "one\ntwo"}]
+    assert Gimlex.parse_content(@multiline_string_file) == expected
   end
 end
