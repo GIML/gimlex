@@ -21,6 +21,9 @@ defmodule Gimlex do
   end
 
   defp parse_num(num) do
-    num |> String.to_integer
+    case String.contains?(num, ".") do
+      false -> String.to_integer(num)
+      true -> String.to_float(num)
+    end
   end
 end
