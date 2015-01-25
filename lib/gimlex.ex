@@ -23,12 +23,23 @@ defmodule Gimlex do
     {:text, name}
   end
 
+  defp parse_type(<<":list:", rest::binary>>) do
+    name = rest
+    |> String.split
+    |> List.first
+    {:list, name}
+  end
+
   defp parse_value({:num, name}, [head|tail]) do
     {name, parse_num(head)}
   end
 
   defp parse_value({:text, name}, rest) do
     {name, parse_text(rest)}
+  end
+
+  defp parse_value({:list, name}, rest) do
+    {name, parse_list(rest)}
   end
 
   defp parse_num(num) do
@@ -40,6 +51,12 @@ defmodule Gimlex do
 
   defp parse_text(str) do
     parse_text(str, [])
+  end
+
+  defp parse_list([str]) do
+    str
+    |> String.split(",", trim: true)
+    |> Enum.map(&String.strip/1)
   end
 
   defp parse_text([], acc) do

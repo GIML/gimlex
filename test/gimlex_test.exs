@@ -22,6 +22,11 @@ defmodule GimlexTest do
   two
   """
 
+  @list_file """
+  :list: my_list
+  a, b, c
+  """
+
   test "gimlex can parse integer" do
     assert Gimlex.parse_content(@int_file) == [{"my_int", 2}]
   end
@@ -37,5 +42,10 @@ defmodule GimlexTest do
   test "gimlex can parse multiline string" do
     expected = [{"my_string", "one\ntwo"}]
     assert Gimlex.parse_content(@multiline_string_file) == expected
+  end
+
+  test "gimlex can parse list" do
+    expected = [{"my_list", ~W[a b c]}]
+    assert Gimlex.parse_content(@list_file) == expected
   end
 end
