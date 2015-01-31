@@ -30,6 +30,13 @@ defmodule Gimlex do
     {:list, name}
   end
 
+  defp parse_type(<<":vlist:", rest::binary>>) do
+    name = rest
+    |> String.split
+    |> List.first
+    {:vlist, name}
+  end
+
   defp parse_value({:num, name}, [head|tail]) do
     {name, parse_num(head)}
   end
@@ -40,6 +47,10 @@ defmodule Gimlex do
 
   defp parse_value({:list, name}, rest) do
     {name, parse_list(rest)}
+  end
+
+  defp parse_value({:vlist, name}, rest) do
+    {name, parse_vlist(rest)}
   end
 
   defp parse_num(num) do
@@ -57,6 +68,18 @@ defmodule Gimlex do
     str
     |> String.split(",", trim: true)
     |> Enum.map(&String.strip/1)
+  end
+
+  defp parse_vlist(rest) do
+    parse_vlist(rest, [])
+  end
+
+  defp parse_vlist([], acc) do
+    Enum.reverse(acc)
+  end
+
+  defp parse_vlist([<<"-", line::binary>>|tail], acc) do
+    parse_vlist(tail, [String.strip(line)|acc])
   end
 
   defp parse_text([], acc) do

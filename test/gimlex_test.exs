@@ -27,6 +27,13 @@ defmodule GimlexTest do
   a, b, c
   """
 
+  @vlist_file """
+  :vlist: my_vlist
+  - a
+  - b
+  - c
+  """
+
   test "gimlex can parse integer" do
     assert Gimlex.parse_content(@int_file) == [{"my_int", 2}]
   end
@@ -47,5 +54,10 @@ defmodule GimlexTest do
   test "gimlex can parse list" do
     expected = [{"my_list", ~W[a b c]}]
     assert Gimlex.parse_content(@list_file) == expected
+  end
+
+  test "gimlex can parse vlist" do
+    expected = [{"my_vlist", ~W[a b c]}]
+    assert Gimlex.parse_content(@vlist_file) == expected
   end
 end
