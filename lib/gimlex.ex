@@ -10,31 +10,19 @@ defmodule Gimlex do
   end
 
   defp parse_type(<<":num:", rest::binary>>) do
-    name = rest
-    |> String.split
-    |> List.first
-    {:num, name}
+    {:num, parse_name(rest)}
   end
 
   defp parse_type(<<":text:", rest::binary>>) do
-    name = rest
-    |> String.split
-    |> List.first
-    {:text, name}
+    {:text, parse_name(rest)}
   end
 
   defp parse_type(<<":list:", rest::binary>>) do
-    name = rest
-    |> String.split
-    |> List.first
-    {:list, name}
+    {:list, parse_name(rest)}
   end
 
   defp parse_type(<<":vlist:", rest::binary>>) do
-    name = rest
-    |> String.split
-    |> List.first
-    {:vlist, name}
+    {:vlist, parse_name(rest)}
   end
 
   defp parse_value({:num, name}, [head|tail]) do
@@ -88,5 +76,11 @@ defmodule Gimlex do
 
   defp parse_text([head|tail], acc) do
     parse_text(tail, [head|acc])
+  end
+
+  defp parse_name(binary) do
+    binary
+    |> String.split
+    |> List.first
   end
 end
