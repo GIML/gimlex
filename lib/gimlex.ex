@@ -5,8 +5,10 @@ defmodule Gimlex do
     |> parse_content([])
   end
 
+  defp parse_content([], acc), do: acc
+
   defp parse_content([head|tail], acc) do
-    [parse_value(parse_type(head), tail) | acc]
+    parse_value(parse_type(head), tail, acc)
   end
 
   defp parse_type(<<":num:", rest::binary>>) do
@@ -25,20 +27,22 @@ defmodule Gimlex do
     {:vlist, parse_name(rest)}
   end
 
-  defp parse_value({:num, name}, [head|tail]) do
-    {name, parse_num(head)}
+  defp parse_value({:num, name}, [head|tail], acc) do
+    parse_content(tail, [{name, parse_num(head)} | acc])
   end
 
-  defp parse_value({:text, name}, rest) do
-    {name, parse_text(rest)}
+  defp parse_value({:text, name}, rest, acc) do
+    {text, tail} = parse_text(rest)
+    parse_content(tail, [{name, text} | acc])
   end
 
-  defp parse_value({:list, name}, rest) do
-    {name, parse_list(rest)}
+  defp parse_value({:list, name}, [head|tail], acc) do
+    parse_content(tail, [{name, parse_list(head)} | acc])
   end
 
-  defp parse_value({:vlist, name}, rest) do
-    {name, parse_vlist(rest)}
+  defp parse_value({:vlist, name}, rest, acc) do
+    {vlist, tail} = parse_vlist(rest)
+    parse_content(tail, [{name, vlist} | acc])
   end
 
   defp parse_num(num) do
@@ -52,7 +56,7 @@ defmodule Gimlex do
     parse_text(str, [])
   end
 
-  defp parse_list([str]) do
+  defp parse_list(str) do
     str
     |> String.split(",", trim: true)
     |> Enum.map(&String.strip/1)
@@ -63,7 +67,11 @@ defmodule Gimlex do
   end
 
   defp parse_vlist([], acc) do
-    Enum.reverse(acc)
+    {Enum.reverse(acc), []}
+  end
+
+  defp parse_vlist(rest = [head = <<":", _::binary>>|tail], acc) do
+    {Enum.reverse(acc), rest}
   end
 
   defp parse_vlist([<<"-", line::binary>>|tail], acc) do
@@ -71,7 +79,11 @@ defmodule Gimlex do
   end
 
   defp parse_text([], acc) do
-    acc |> Enum.reverse |> Enum.join("\n")
+    {acc |> Enum.reverse |> Enum.join("\n"), []}
+  end
+
+  defp parse_text(rest = [head = <<":", _::binary>>|tail], acc) do
+    {acc |> Enum.reverse |> Enum.join("\n"), rest}
   end
 
   defp parse_text([head|tail], acc) do

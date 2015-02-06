@@ -60,4 +60,17 @@ defmodule GimlexTest do
     expected = [{"my_vlist", ~W[a b c]}]
     assert Gimlex.parse_content(@vlist_file) == expected
   end
+
+  test "gimlex can parse multiple values" do
+    expected = [{"str", "abc"}, {"num_var", 1}, {"list", ~W[a b c]}]
+    data = """
+    :list: list
+    a, b, c
+    :num: num_var
+    1
+    :text: str
+    abc
+    """
+    assert Gimlex.parse_content(data) == expected
+  end
 end
