@@ -1,5 +1,5 @@
 defmodule GimlexTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   @int_file """
   :num: my_int
