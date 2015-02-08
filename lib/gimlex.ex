@@ -70,7 +70,7 @@ defmodule Gimlex do
     {Enum.reverse(acc), []}
   end
 
-  defp parse_vlist(rest = [head = <<":", _::binary>>|tail], acc) do
+  defp parse_vlist(rest = [<<":", _::binary>>|_], acc) do
     {Enum.reverse(acc), rest}
   end
 
@@ -82,7 +82,7 @@ defmodule Gimlex do
     {acc |> Enum.reverse |> Enum.join("\n"), []}
   end
 
-  defp parse_text(rest = [head = <<":", _::binary>>|tail], acc) do
+  defp parse_text(rest = [<<":", _::binary>>|_], acc) do
     {acc |> Enum.reverse |> Enum.join("\n"), rest}
   end
 
