@@ -115,4 +115,17 @@ defmodule GimlexTest do
 
     assert Gimlex.parse_content(data) == expected
   end
+
+  test "gimlex parse file" do
+    path = "test/test_file.giml"
+    expected = [
+      {"this_is_another_array", ~W[1 2 3 4 5 6]},
+      {"this_is_array", ~W[1 2 3 4 5 1 2 3 4 5]},
+      {"this_another_num", 123.234},
+      {"this_is_num", 12345},
+      {"this_is_text", "Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text\nSome text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text"}
+    ]
+
+    assert Gimlex.parse_file!(path) == expected
+  end
 end

@@ -1,4 +1,15 @@
 defmodule Gimlex do
+  def parse_file(path) do
+    {:ok, file} = File.read(path)
+    {:ok, parse_content(file)}
+  end
+
+  def parse_file!(path) do
+    path
+    |> File.read!
+    |> parse_content
+  end
+
   def parse_content(data) do
     data
     |> String.split("\n", trim: true)
@@ -29,6 +40,10 @@ defmodule Gimlex do
 
   defp parse_type(<<":vlist:", rest::binary>>) do
     {:vlist, parse_name(rest)}
+  end
+
+  defp parse_value(type_name, [<<"#", _::binary>>|tail], acc) do
+    parse_value(type_name, tail, acc)
   end
 
   defp parse_value({:num, name}, [head|tail], acc) do
