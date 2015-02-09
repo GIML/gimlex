@@ -80,4 +80,11 @@ defmodule GimlexTest do
 
     assert Gimlex.parse_content(data) == expected
   end
+
+  test "gimlex parse list properly handle beginning and ending line" do
+    data = ":list: list\n\na, b, c\n\n"
+    expected = [{"list", ~W[a b c]}]
+
+    assert Gimlex.parse_content(data) == expected
+  end
 end
