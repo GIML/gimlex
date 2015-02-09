@@ -94,4 +94,11 @@ defmodule GimlexTest do
 
     assert Gimlex.parse_content(data) == expected
   end
+
+  test "gimlex parse list properly handle multiline defenition" do
+    data = ":list: list\na, b, c,\nd, e, f,\n"
+    expected = [{"list", ~W[a b c d e f]}]
+
+    assert Gimlex.parse_content(data) == expected
+  end
 end
