@@ -108,4 +108,11 @@ defmodule GimlexTest do
 
     assert Gimlex.parse_content(data) == expected
   end
+
+  test "gimlex parse properly handle comments" do
+    data = "#comment\n:list: list\na, b, c\n"
+    expected = [{"list", ~W[a b c]}]
+
+    assert Gimlex.parse_content(data) == expected
+  end
 end

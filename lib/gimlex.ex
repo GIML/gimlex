@@ -7,6 +7,10 @@ defmodule Gimlex do
 
   defp parse_content([], acc), do: acc
 
+  defp parse_content([<<"#", _::binary>>|tail], acc) do
+    parse_content(tail, acc)
+  end
+
   defp parse_content([head|tail], acc) do
     parse_value(parse_type(head), tail, acc)
   end
