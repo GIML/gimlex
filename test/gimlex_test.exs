@@ -87,4 +87,11 @@ defmodule GimlexTest do
 
     assert Gimlex.parse_content(data) == expected
   end
+
+  test "gimlex parse list properly handle ending line comma" do
+    data = ":list: list\na, b, c,\n"
+    expected = [{"list", ~W[a b c]}]
+
+    assert Gimlex.parse_content(data) == expected
+  end
 end
